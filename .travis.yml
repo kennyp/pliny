@@ -3,9 +3,10 @@ rvm:
   - 2.2.0
   - 2.1.5
   - 2.1.0
-  - 1.9.3
 addons:
   postgresql: '9.3'
+before_script:
+  - createdb pliny-gem-test
 sudo: false
 cache: bundler
 notifications:
@@ -15,4 +16,5 @@ notifications:
     template:
       - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a> | <a href="%{compare_url}">Change view</a>)'
     format: html
+  email: false
 script: bundle exec rake

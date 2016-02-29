@@ -35,6 +35,28 @@ module Pliny
       ->(v) { v.to_sym }
     end
 
+    # optional :accronyms, array(string)
+    # => ['a', 'b']
+    # optional :numbers, array(int)
+    # => [1, 2]
+    # optional :notype, array
+    # => ['a', 'b']
+    def array(method = nil)
+      -> (v) do
+        if v
+          v.split(",").map{|a| cast(a, method) }
+        end
+      end
+    end
+
+    def rack_env
+      if pliny_env == "development" || pliny_env == "test"
+        "development"
+      else
+        "deployment"
+      end
+    end
+
     private
 
     def cast(value, method)
@@ -82,5 +104,7 @@ module Pliny
 
 end
 
-# Supress the "use RbConfig instead" warning.
-Object.send(:remove_const, :Config) if Object.const_defined?(:Config)
+# Supress the "use RbConfig instead" warning
+if Object.const_defined?(:Config) && !Config.is_a?(Pliny::CastingConfigHelpers)
+  Object.send(:remove_const, :Config)
+end

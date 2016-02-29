@@ -1,3 +1,3 @@
 module Pliny
-  VERSION = "0.7.2"
+  VERSION = "0.15.1"
 end

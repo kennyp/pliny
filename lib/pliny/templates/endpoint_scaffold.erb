@@ -1,9 +1,8 @@
 module Endpoints
   class <%= plural_class_name %> < Base
     namespace "<%= url_path %>" do
-      before do
-        content_type :json, charset: 'utf-8'
-      end
+      serializer Serializers::<%= singular_class_name %>
+
 
       get do
         encode serialize(<%= singular_class_name %>.all)
@@ -18,27 +17,21 @@ module Endpoints
       end
 
       get "/:id" do |id|
-        <%= field_name %> = <%= singular_class_name %>.first(uuid: id) || halt(404)
+        <%= field_name %> = <%= singular_class_name %>.first(id: id) || halt(404)
         encode serialize(<%= field_name %>)
       end
 
       patch "/:id" do |id|
-        <%= field_name %> = <%= singular_class_name %>.first(uuid: id) || halt(404)
+        <%= field_name %> = <%= singular_class_name %>.first(id: id) || halt(404)
         # warning: not safe
         #<%= field_name %>.update(body_params)
         encode serialize(<%= field_name %>)
       end
 
       delete "/:id" do |id|
-        <%= field_name %> = <%= singular_class_name %>.first(uuid: id) || halt(404)
+        <%= field_name %> = <%= singular_class_name %>.first(id: id) || halt(404)
         <%= field_name %>.destroy
         encode serialize(<%= field_name %>)
-      end
-
-      private
-
-      def serialize(data, structure = :default)
-        Serializers::<%= singular_class_name %>.new(structure).serialize(data)
       end
     end
   end

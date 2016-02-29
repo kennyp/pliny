@@ -12,13 +12,13 @@ module Initializer
 
   def self.require_lib
     require! %w(
+      lib/serializers/base
+      lib/serializers/**/*
       lib/endpoints/base
       lib/endpoints/**/*
       lib/mediators/base
       lib/mediators/**/*
       lib/routes
-      lib/serializers/base
-      lib/serializers/**/*
     )
   end
 
@@ -33,8 +33,7 @@ module Initializer
   end
 
   def self.require!(globs)
-    globs = [globs] unless globs.is_a?(Array)
-    globs.each do |f|
+    Array(globs).each do |f|
       Pliny::Utils.require_glob("#{Config.root}/#{f}.rb")
     end
   end

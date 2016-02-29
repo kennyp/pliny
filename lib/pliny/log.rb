@@ -1,7 +1,7 @@
 module Pliny
   module Log
     def log(data, &block)
-      data = log_context.merge(local_context.merge(data))
+      data = default_context.merge(log_context.merge(local_context.merge(data)))
       log_to_stream(stdout || $stdout, data, &block)
     end
 
@@ -12,6 +12,14 @@ module Pliny
     ensure
       self.local_context = old
       res
+    end
+
+    def default_context=(default_context)
+      @default_context = default_context
+    end
+
+    def default_context
+      @default_context || {}
     end
 
     def stdout=(stream)
@@ -52,7 +60,7 @@ module Pliny
         rescue
           log_to_stream(stream, data.merge(
             at: "exception", elapsed: (Time.now - start).to_f))
-          raise
+          raise $!
         end
       end
     end
